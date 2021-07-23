@@ -3,6 +3,7 @@
 
 TRANSLATIONS = de es fr ko pt_br ru uk vi zh_cn zh_tw it pl
 LANGS = en $(TRANSLATIONS)
+PANDOC_PDF_COMMON_OPTIONS :=  --latex-engine xelatex --toc --toc-depth 2 -V monofont="FreeMono" -V geometry='left=2cm,right=1.5cm,top=2cm,bottom=2.5cm'
 
 .PHONY: all clean $(LANGS)
 
@@ -58,22 +59,22 @@ $(foreach l,$(LANGS),book-$(l).html): book-%.html: book-%.xml
 	pandoc -s -f docbook -t html5 -o $@ $^
 
 $(foreach l,$(LANGS),book-$(l).pdf): book-%.pdf: book-%.xml
-	pandoc -s -f docbook -o $@  --pdf-engine=xelatex $^
+	pandoc -s -f docbook -o $@ ${PANDOC_PDF_COMMON_OPTIONS} $^
 
 book-ru.pdf: book-ru.xml
-	pandoc -s -f docbook -o $@ --pdf-engine xelatex -V mainfont='DejaVuSansMono' $^
+	pandoc -s -f docbook -o $@ ${PANDOC_PDF_COMMON_OPTIONS} -V mainfont='DejaVuSansMono' -V lang='ru-RU' -V otherlangs='[en-US]' $^
 
 book-uk.pdf: book-uk.xml
-	pandoc -s -f docbook -o $@ --pdf-engine xelatex -V mainfont='DejaVuSansMono' $^
+	pandoc -s -f docbook -o $@ ${PANDOC_PDF_COMMON_OPTIONS} -V mainfont='DejaVuSansMono' -V lang='uk-UA' -V otherlangs='[en-US]' $^
 
 book-ko.pdf: book-ko.xml
-	pandoc -s -f docbook -o $@ --pdf-engine xelatex -V CJKmainfont='NanumGothic' $^
+	pandoc -s -f docbook -o $@ ${PANDOC_PDF_COMMON_OPTIONS} -V CJKmainfont='NanumGothic' -V lang='ko-KR' -V otherlangs='[en-US]' $^
 
 book-zh_cn.pdf: book-zh_cn.xml
-	pandoc -s -f docbook -o $@ --pdf-engine xelatex -V CJKmainfont='WenQuanYi Micro Hei Mono' $^
+	pandoc -s -f docbook -o $@ ${PANDOC_PDF_COMMON_OPTIONS} -V CJKmainfont='WenQuanYi Micro Hei Mono' -V lang='zh-CN' -V otherlangs='[en-US]' $^
 
 book-zh_tw.pdf: book-zh_tw.xml
-	pandoc -s -f docbook -o $@ --pdf-engine xelatex -V CJKmainfont='WenQuanYi Micro Hei Mono' $^
+	pandoc -s -f docbook -o $@ ${PANDOC_PDF_COMMON_OPTIONS} -V CJKmainfont='WenQuanYi Micro Hei Mono' -V lang='zh-TW' -V otherlangs='[en-US]' $^
 
 $(foreach l,$(LANGS),book-$(l).epub): book-%.epub: book-%.xml
 	pandoc -s -f docbook -o $@ $^
